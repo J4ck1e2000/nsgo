@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.LocalSocket;
-import android.os.Build;
-import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -85,16 +83,6 @@ public final class NsgoEngine {
     synchronized void start(ProcessBuilder builder) throws IOException {
         if (!canStart()) throw new IllegalStateException(closed ? "engine is destroyed" : "engine has started its process");
         builder.environment().put("TZ", TimeZone.getDefault().getID());
-        // Pass the Java host's launch time before Go can enter main.
-        if (Build.VERSION.SDK_INT >= 24) {
-            long start = android.os.Process.getStartElapsedRealtime();
-            if (start > 0) {
-                long elapsed = SystemClock.elapsedRealtime();
-                long wall = System.currentTimeMillis();
-                elapsed += (SystemClock.elapsedRealtime() - elapsed) / 2;
-                builder.environment().put("NSGO_PROCESS_START_MS", Long.toString(wall - (elapsed - start)));
-            }
-        }
         testRun = builder.environment().get("NSGO_TEST_RUN");
         process = builder.start();
         out = new DataOutputStream(new BufferedOutputStream(process.getOutputStream()));

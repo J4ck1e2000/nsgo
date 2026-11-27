@@ -7,7 +7,7 @@ func TestProcessStartTicks(t *testing.T) {
 	for _, tc := range []struct {
 		name string
 		stat string
-		want uint64
+		want int64
 		ok   bool
 	}{
 		{"normal", "123 (go)" + fields + "3456789 23\n", 3456789, true},
@@ -15,7 +15,8 @@ func TestProcessStartTicks(t *testing.T) {
 		{"empty name and zero ticks", "123 ()" + fields + "0 23", 0, true},
 		{"truncated", "123 (go)" + fields, 0, false},
 		{"negative", "123 (go)" + fields + "-1 23", 0, false},
-		{"overflow", "123 (go)" + fields + "18446744073709551616 23", 0, false},
+		{"max signed", "123 (go)" + fields + "9223372036854775807 23", 1<<63 - 1, true},
+		{"signed overflow", "123 (go)" + fields + "9223372036854775808 23", 0, false},
 		{"missing name", "123 go)" + fields + "10", 0, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

@@ -27,7 +27,7 @@ func procStart(path string) time.Time {
 	}
 	wall = wall.Add(time.Since(wall) / 2)
 	uptime := time.Duration(boot.Nano())
-	if uptime < 0 || ticks > uint64(uptime/tick) {
+	if uptime < 0 || ticks > int64(uptime/tick) {
 		return time.Time{}
 	}
 	return wall.Add(time.Duration(ticks)*tick - uptime).UTC()
