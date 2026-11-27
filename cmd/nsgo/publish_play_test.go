@@ -1096,7 +1096,7 @@ func TestPlayPublishCommand(t *testing.T) {
 func TestPlayPublishProductionRollout(t *testing.T) {
 	dir := t.TempDir()
 	writeFiles(t, dir, map[string]string{
-		"nsgo.yaml":                  "name: Example App\nid: " + testPlayApp + "\nversion: 1.2.3\nstore:\n  dir: listings\n",
+		"nsgo.yaml":                   "name: Example App\nid: " + testPlayApp + "\nversion: 1.2.3\nstore:\n  dir: listings\n",
 		"listings/listing.yaml":       "version: 1\n",
 		"listings/en-US/listing.yaml": "version: 1\nrelease_notes: Improved search.\n",
 		"listings/zh-Hans/listing.yaml": `version: 1
@@ -1130,7 +1130,7 @@ google_play:
 	fraction, priority := 0.1, 4
 	for _, tc := range []struct {
 		name, path, body, commitQuery, output string
-		o                                    playPublishOptions
+		o                                     playPublishOptions
 	}{
 		{"staged project upload", dir, prefix + previous + `,{"versionCodes":["19"],"status":"inProgress","name":"Next","userFraction":0.1,"releaseNotes":` + notes + `,"inAppUpdatePriority":4}]}`, "?changesNotSentForReview=true", "staged rollout at 0.1", playPublishOptions{fraction: &fraction, priority: &priority, name: "Next", changesNotSentForReview: true}},
 		{"full standalone upload", bundlePath, prefix + `{"versionCodes":["19"],"status":"completed","releaseNotes":` + notes + `}]}`, "", "full rollout, 100%", playPublishOptions{listings: filepath.Join(dir, "listings")}},

@@ -19,10 +19,10 @@ import (
 
 type playPublishOptions struct {
 	track, listings, name, action string
-	fraction                     *float64
-	priority                     *int
-	changesNotSentForReview      bool
-	client                       *googlePlayClient
+	fraction                      *float64
+	priority                      *int
+	changesNotSentForReview       bool
+	client                        *googlePlayClient
 }
 
 func validPlayFraction(f float64) bool { return f > 0 && f < 1 }
